@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Fitbit API Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" ng-controller="ChatController">
+      <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+          <div class="pull-right">
+            <a href="https://dev.fitbit.com/apps/" class="brand">Fitbit</a>
+          </div>
+        </div>
+      </div>
+      <div class="page-header">
+        <h1>Fitbit API Example</h1>
+      </div>
+        <div class="container">
+        <div class="row controls">
+          <a class="login btn btn-success" href="/authorize">Login</a>
+          <div class="well user">
+            <div class="row">
+              <img class="avatar span4" style="width: 150px; height: 150px" src="">
+              <h2 class="fullname span4"></h2>
+            </div>
+            <div class="row top-badge" style="margin-top: 20px;">
+              <img class="span4 badge-icon" style="width: 50px; height: 50px" src="">
+              <h3 class="span8 badge-name"></h3>
+              
+              <p class="span12 badge-description"></p>
+              
+            </div>
+            <a class="btn btn-warning" href="/logout">Logout</a>
+          </div>
+          <br/>
+          <br/>
+          <p>
+            <a class="btn btn-secondary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              Show API Response
+            </a>
+          </p>
+          <div class="collapse" id="collapseExample">
+            <div class="card card-block">
+              <p class="response"></p>
+            </div>
+          </div>
+          
+        </div>
+        </div>
+    </div>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+      $.getJSON('/profile.json').done(function(response) {
+        $('a.login').hide();
+        $('.avatar').attr('src', response.user.avatar);
+        $('.fullname').text(response.user.fullName);
+        $('.averageDailySteps').text(response.user.averageDailySteps);
+        if (response.user.topBadges.length > 0) {
+          var topBadge = response.user.topBadges[0];
+          $('.badge-name').text(topBadge.name);
+          $('.badge-description').text(topBadge.marketingDescription);
+          $('.badge-icon').attr('src', topBadge.image50px);
+        } else {
+          $('.top-badge').hide();
+        }
+        
+        $('p.response').text(JSON.stringify(response));
+      }).fail(function(error) {
+        $('p.response').text(JSON.stringify(error));
+        $('.user').hide();
+      });
+    </script>
+  </body>
+</html>
